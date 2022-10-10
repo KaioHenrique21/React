@@ -1,16 +1,19 @@
 import { format, formatDistanceToNow } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
+import { useState } from 'react';
 
 import { Avatar } from './Avatar'
 import { Comment } from './Comment'
 import styles from './Post.module.css'
 
-const Comments = [
-	1,
-	2,
-];
 
 export function Post({ author, publishedAt, content }) {
+	const [Comments, setComments] = useState([
+		'Post muito legal'
+	])
+
+	const [newCommentText, setNewCommentText] = useState('')
+
 	const publisheDateFormatted = format(publishedAt, "d 'de' LLLL 'ás' HH:mm'h'", {
 		locale: ptBR,
 	})
@@ -23,8 +26,14 @@ export function Post({ author, publishedAt, content }) {
 	function handleCreateNewComment() {
 		event.preventDefault()
 
-		Comments.push(3);
-		console.log(Comments)
+		const newCommentText = event.target.comment.value
+		
+		setComments([...Comments, newCommentText]);
+
+	}
+
+	function handleNewCommentChange() {
+		setNewCommentText(event.target.value);
 	}
 
 	return(
@@ -46,9 +55,9 @@ export function Post({ author, publishedAt, content }) {
 			<div className={styles.content}>
 				{content.map(line => {
 					if(line.type === 'paragraph') {
-						return <p>{line.content}</p>
+						return <p key={line.content}>{line.content}</p>
 					} else if (line.type === 'link') {
-						return <p><a href="#">{line.content}</a></p>;
+						return <p key={line.content}><a href="#">{line.content}</a></p>;
 					}
 				})}				
 			</div>
@@ -56,7 +65,12 @@ export function Post({ author, publishedAt, content }) {
 			<form onSubmit={handleCreateNewComment} className={styles.commentForm}>
 				<strong>Deixe o seu feedback</strong>
 
-				<textarea placeholder='Deixe um comentário' />
+				<textarea
+					name="comment"
+					placeholder='Deixe um comentário'
+					value={newCommentText}
+					onChange={handleNewCommentChange}
+				/>
 				
 				<footer>
 
@@ -68,7 +82,7 @@ export function Post({ author, publishedAt, content }) {
 
 			<div className={styles.commentList}>
 				{Comments.map(comments => {
-					return <Comment />
+					return <Comment key={Comment} content={comments} />
 				})}				
 			</div>
 		</article>
