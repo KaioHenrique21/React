@@ -62,7 +62,7 @@
 	margin-top: 1rem;
 }
 
-.commentBox footer {
+.commentBox footer,button {
 	background: transparent;
     border: 0;
     cursor: pointer;
